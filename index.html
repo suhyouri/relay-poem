@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>릴레이-시작 | Relay-Poem</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- 데스크탑 전용 메시지 -->
+    <div class="desktop-only-message">
+      <h1>모바일로 접속바랍니다.</h1>
+    </div>
+
+    <!-- 모바일 콘텐츠 -->
+    <div class="container">
+      <header>
+        <h1>릴레이-시작 | Relay-Poem</h1>
+        <div id="current-location" class="current-location">
+          위치 확인 중...
+        </div>
+      </header>
+
+      <main>
+        <div class="content-viewer">
+          <div id="poem-content" class="poem-content">로딩 중...</div>
+        </div>
+
+        <div class="input-section">
+          <div class="name-input">
+            <input type="text" id="name" placeholder="이름입력" />
+          </div>
+
+          <div class="content-input">
+            <textarea
+              id="content"
+              placeholder="떠오르는 3가지 단어를 입력하세요"
+              rows="1"
+            ></textarea>
+          </div>
+
+          <button id="submit-btn" class="submit-button">제출</button>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
