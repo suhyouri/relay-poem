@@ -76,9 +76,15 @@ async function getLocation() {
   return new Promise((resolve) => {
     if (!navigator.geolocation) {
       console.log("Geolocation not supported");
-      resolve({ lat: "", long: "", location: "" });
+      resolve({ lat: "", long: "", location: "", error: "브라우저가 위치 기능을 지원하지 않습니다" });
       return;
     }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 300000 // 5분간 캐시 사용
+    };
 
     navigator.geolocation.getCurrentPosition(
       async (position) => {
@@ -125,8 +131,25 @@ async function getLocation() {
       },
       (error) => {
         console.error("Error getting position:", error);
-        resolve({ lat: "", long: "", location: "" });
+        let errorMessage = "";
+
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "위치 권한이 거부되었습니다";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "위치 정보를 사용할 수 없습니다";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "위치 요청 시간이 초과되었습니다";
+            break;
+          default:
+            errorMessage = "알 수 없는 오류가 발생했습니다";
+        }
+
+        resolve({ lat: "", long: "", location: "", error: errorMessage });
       },
+      options
     );
   });
 }
@@ -140,7 +163,10 @@ async function displayCurrentLocation() {
   if (locationInfo.location) {
     currentLocationEl.textContent = locationInfo.location;
   } else {
-    currentLocationEl.textContent = "위치를 확인할 수 없습니다";
+    currentLocationEl.textContent = "당신은 ....";
+    if (locationInfo.error) {
+      console.error("위치 오류:", locationInfo.error);
+    }
   }
 }
 
@@ -188,7 +214,8 @@ async function submitPoem() {
     const data = await response.json();
 
     if (data.success) {
-      showMessage("제출완료!", "success");
+      // Change button to "제출완료" temporarily
+      submitBtn.textContent = "제출완료";
 
       // Clear inputs
       nameInput.value = "";
@@ -196,15 +223,23 @@ async function submitPoem() {
 
       // Reload poems
       await loadPoems();
+
+      // Revert button back to "제출" after 2 seconds
+      setTimeout(() => {
+        submitBtn.textContent = "제출";
+      }, 2000);
     } else {
       showMessage(data.error || "제출에 실패했습니다.", "error");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "제출";
     }
   } catch (error) {
     console.error("Error submitting poem:", error);
     showMessage("Google Apps Script 연결 오류가 발생했습니다.", "error");
-  } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = "제출";
+  } finally {
+    submitBtn.disabled = false;
   }
 }
 
