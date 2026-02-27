@@ -1,4 +1,4 @@
-# 릴레이-시작기 | Relay-Poem
+# 릴레이-시작 | Relay-Poem
 
 릴레이 시 작성 웹 애플리케이션입니다. GitHub Pages에 호스팅되며, Google Apps Script를 통해 Google Spreadsheet에 데이터를 저장합니다.
 
